@@ -8,7 +8,6 @@ export class SimulationController {
 
     @Post()
     createSimulation (@Body() dto: CreateSimulationDto) {
-        
         return this.simulationService.newSimulation(dto)
     }
 }
