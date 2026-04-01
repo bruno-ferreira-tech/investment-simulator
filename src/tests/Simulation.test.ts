@@ -2,6 +2,7 @@ import { Simulation } from "../domain/entities/Simulation"
 import { MonetaryAmount } from "../domain/value-objects/MonetaryAmount"
 import { InterestRate } from "../domain/value-objects/InterestRate"
 import { InvestmentPeriod } from "../domain/value-objects/InvestmentPeriod"
+import { ExemptTaxStrategy } from "../domain/tax-strategies/ExemptTaxStrategy"
 
 describe("Simulation", () => {
 
@@ -12,6 +13,7 @@ describe("Simulation", () => {
     const taxaAnual = new InterestRate(12)
     const periodo = new InvestmentPeriod(1)
     const reajusteAnual = new InterestRate(0)
+    const estrategia = new ExemptTaxStrategy()
 
     // ACT
     const simulation = new Simulation(
@@ -19,7 +21,8 @@ describe("Simulation", () => {
       aporteMensal,
       taxaAnual,
       periodo,
-      reajusteAnual
+      reajusteAnual,
+      estrategia
     )
 
     // ASSERT
