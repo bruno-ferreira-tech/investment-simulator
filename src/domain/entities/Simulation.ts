@@ -1,36 +1,50 @@
-import { InterestRate } from "../value-objects/InterestRate"
-import { InvestmentPeriod } from "../value-objects/InvestmentPeriod"
-import { MonetaryAmount } from "../value-objects/MonetaryAmount"
+import { ITaxStrategy } from "../tax-strategies/ITaxStrategy";
+import { InterestRate } from "../value-objects/InterestRate";
+import { InvestmentPeriod } from "../value-objects/InvestmentPeriod";
+import { MonetaryAmount } from "../value-objects/MonetaryAmount";
 
 export class Simulation {
+  private readonly montanteFinal: number;
+  private readonly montanteLiquido: number;
 
-    private readonly montanteFinal: number
+  constructor(
+    aporteInicial: MonetaryAmount,
+    aporteMensal: MonetaryAmount,
+    taxaAnual: InterestRate,
+    tempoInvestimento: InvestmentPeriod,
+    reajusteAnual: InterestRate,
+    private readonly estrategia: ITaxStrategy,
+  ) {
+    const taxaMensal = Math.pow(1 + taxaAnual.getValue(), 1 / 12) - 1;
+    const totalMeses = tempoInvestimento.getValue() * 12;
+    let aporteMensalAtual = aporteMensal.getValue();
+    let montante = aporteInicial.getValue();
+    let totalInvestido = aporteInicial.getValue();
 
-    constructor(
-        aporteInicial: MonetaryAmount,
-        aporteMensal: MonetaryAmount,
-        taxaAnual: InterestRate,
-        tempoInvestimento: InvestmentPeriod,
-        reajusteAnual: InterestRate
-    ) {
+    for (let i = 1; i <= totalMeses; i++) {
+      montante = (montante + aporteMensalAtual) * (1 + taxaMensal);
+      totalInvestido += aporteMensalAtual;
 
-        const taxaMensal = Math.pow(1 + taxaAnual.getValue(), 1 / 12) - 1
-        const totalMeses = tempoInvestimento.getValue() * 12
-        let aporteMensalAtual = aporteMensal.getValue()
-        let montante = aporteInicial.getValue()
-
-        for (let i = 1; i <= totalMeses; i++) {
-            montante = (montante + aporteMensalAtual) * (1 + taxaMensal)
-
-            if (i > 0 && i % 12 === 0) {
-                aporteMensalAtual *= (1 + reajusteAnual.getValue())
-            }
-        }
-
-        this.montanteFinal = montante
-    }
-    getMontanteFinal(): number {
-        return this.montanteFinal;
+      if (i > 0 && i % 12 === 0) {
+        aporteMensalAtual *= 1 + reajusteAnual.getValue();
+      }
     }
 
+    const imposto = this.estrategia.calculate(
+      montante,
+      totalInvestido,
+      totalMeses,
+    );
+
+    this.montanteFinal = montante;
+    this.montanteLiquido = montante - imposto;
+  }
+
+  getMontanteFinal(): number {
+    return this.montanteFinal;
+  }
+
+  getMontanteLiquido(): number {
+    return this.montanteLiquido;
+  }
 }
