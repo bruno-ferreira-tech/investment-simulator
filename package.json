@@ -31,6 +31,7 @@
   "homepage": "https://github.com/bruno-ferreira-tech/investment-simulator#readme",
   "devDependencies": {
     "@nestjs/cli": "^11.0.16",
+    "@types/ioredis": "^4.28.10",
     "@types/jest": "^30.0.0",
     "jest": "^30.3.0",
     "ts-jest": "^29.4.6",
@@ -38,11 +39,14 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.1.17",
     "@nestjs/core": "^11.1.17",
     "@nestjs/platform-express": "^11.1.17",
+    "axios": "^1.14.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
+    "ioredis": "^5.10.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   }
