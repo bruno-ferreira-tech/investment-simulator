@@ -1,4 +1,11 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsPositive, Max, Min } from "class-validator";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  Max,
+  Min,
+} from "class-validator";
 
 export class CreateSimulationDto {
   @IsNotEmpty({ message: 'O campo "aporteInicial" é obrigatório.' })
@@ -37,6 +44,8 @@ export class CreateSimulationDto {
   reajusteAnual!: number;
 
   @IsNotEmpty({ message: "O tipo de investimento é obrigatório." })
-  @IsEnum(["CDB", "LCI"], { message: "O tipo deve ser CDB ou LCI." })
+  @IsEnum(["CDB", "LCI", "LCA"], {
+    message: "O tipo deve ser CDB, LCI ou LCA.",
+  })
   tipoInvestimento!: string;
 }
