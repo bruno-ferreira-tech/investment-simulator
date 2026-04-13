@@ -17,9 +17,7 @@ export class CreateSimulationDto {
 
   @IsNotEmpty({ message: 'O campo "aporteMensal" é obrigatório.' })
   @IsNumber({}, { message: 'O campo "aporteMensal" deve ser um número.' })
-  @IsPositive({
-    message: 'O campo "aporteMensal" deve ser um número positivo.',
-  })
+  @Min(0, { message: 'O campo "aporteMensal" não pode ser negativo.'})
   aporteMensal!: number;
 
   @IsNotEmpty({ message: 'O campo "taxaAnual" é obrigatório.' })

@@ -5,12 +5,12 @@ const CDI_CACHE_KEY = 'cdi:taxa'
 const CDI_TTL_SECONDS = 60 * 60 * 24 // 24 horas
 
 export async function getCdiRate(): Promise<number> {
-  const cached = await redisClient.get(CDI_CACHE_KEY)
+  // const cached = await redisClient.get(CDI_CACHE_KEY)
 
-  if (cached) {
-    console.log('CDI do cache')
-    return parseFloat(cached)
-  }
+  // if (cached) {
+  //   console.log('CDI do cache')
+  //   return parseFloat(cached)
+  // }
 
   console.log('CDI do Bacen')
   const taxa = await fetchCdiRate()
