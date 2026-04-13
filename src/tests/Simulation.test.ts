@@ -1,19 +1,18 @@
-import { Simulation } from "../domain/entities/Simulation"
-import { MonetaryAmount } from "../domain/value-objects/MonetaryAmount"
-import { InterestRate } from "../domain/value-objects/InterestRate"
-import { InvestmentPeriod } from "../domain/value-objects/InvestmentPeriod"
-import { ExemptTaxStrategy } from "../domain/tax-strategies/ExemptTaxStrategy"
+import { Simulation } from "../domain/entities/Simulation";
+import { MonetaryAmount } from "../domain/value-objects/MonetaryAmount";
+import { InterestRate } from "../domain/value-objects/InterestRate";
+import { InvestmentPeriod } from "../domain/value-objects/InvestmentPeriod";
+import { ExemptTaxStrategy } from "../domain/tax-strategies/ExemptTaxStrategy";
 
 describe("Simulation", () => {
-
   it("deve calcular o montante final corretamente", () => {
     // ARRANGE
-    const aporteInicial = new MonetaryAmount(1000)
-    const aporteMensal = new MonetaryAmount(500)
-    const taxaAnual = new InterestRate(12)
-    const periodo = new InvestmentPeriod(1)
-    const reajusteAnual = new InterestRate(0)
-    const estrategia = new ExemptTaxStrategy()
+    const aporteInicial = new MonetaryAmount(1000);
+    const aporteMensal = new MonetaryAmount(500);
+    const taxaAnual = new InterestRate(12);
+    const periodo = new InvestmentPeriod(1);
+    const reajusteAnual = new InterestRate(0);
+    const estrategia = new ExemptTaxStrategy();
 
     // ACT
     const simulation = new Simulation(
@@ -22,21 +21,46 @@ describe("Simulation", () => {
       taxaAnual,
       periodo,
       reajusteAnual,
-      estrategia
-    )
+      estrategia,
+    );
 
     // ASSERT
-    expect(simulation.getMontanteFinal()).toBeCloseTo(7503.25, 1)
-  })
+    expect(simulation.getMontanteFinal()).toBeCloseTo(7503.25, 1);
+  });
 
   it("deve rejeitar aporte inicial negativo", () => {
-    expect(() => new MonetaryAmount(-1000))
-      .toThrow("Valor inválido: não pode ser negativo")
-  })
+    expect(() => new MonetaryAmount(-1000)).toThrow(
+      "Valor inválido: não pode ser negativo",
+    );
+  });
 
   it("deve rejeitar taxa negativa", () => {
-    expect(() => new InterestRate(-5))
-      .toThrow("Taxa não pode ser negativa")
-  })
+    expect(() => new InterestRate(-5)).toThrow("Taxa não pode ser negativa");
+  });
 
-})
+  it("deve aceitar aporte mensal zero", () => {
+    const aporteInicial = new MonetaryAmount(1000);
+    const aporteMensal = new MonetaryAmount(0, true);
+    const taxaAnual = new InterestRate(12);
+    const periodo = new InvestmentPeriod(1);
+    const reajusteAnual = new InterestRate(0);
+    const estrategia = new ExemptTaxStrategy();
+
+    const simulation = new Simulation(
+      aporteInicial,
+      aporteMensal,
+      taxaAnual,
+      periodo,
+      reajusteAnual,
+      estrategia,
+    );
+
+    expect(simulation.getMontanteFinal()).toBeGreaterThan(1000);
+  });
+
+  it("deve rejeitar aporte inicial abaixo de R$ 0,01", () => {
+    expect(() => new MonetaryAmount(0.001)).toThrow(
+      "Valor inválido: mínimo é R$ 0,01",
+    );
+  });
+});
