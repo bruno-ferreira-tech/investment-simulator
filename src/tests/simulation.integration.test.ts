@@ -35,6 +35,7 @@ describe("SimulationController (integration)", () => {
         aporteMensal: 500,
         taxaAnual: 12,
         tempoInvestimento: 1,
+        inflacao: 5,
         reajusteAnual: 0,
         tipoInvestimento: "CDB",
       });

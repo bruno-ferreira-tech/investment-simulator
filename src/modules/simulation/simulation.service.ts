@@ -4,10 +4,10 @@ import { Simulation } from "../../domain/entities/Simulation";
 import { MonetaryAmount } from "../../domain/value-objects/MonetaryAmount";
 import { InterestRate } from "../../domain/value-objects/InterestRate";
 import { InvestmentPeriod } from "../../domain/value-objects/InvestmentPeriod";
-import { ExemptTaxStrategy } from "../../domain/tax-strategies/ExemptTaxStrategy";
 import { RegressiveTaxStrategy } from "../../domain/tax-strategies/RegressiveTaxStrategy";
 import { getCdiRate } from "../../infra/cache/cdi.cache.service";
 import { TaxStrategyFactory } from "../../domain/tax-strategies/TaxStrategyFactory";
+import { ExemptTaxStrategy } from "../../domain/tax-strategies/ExemptTaxStrategy";
 
 @Injectable()
 export class SimulationService {
@@ -19,6 +19,7 @@ export class SimulationService {
     const taxaAnual = new InterestRate(data.taxaAnual);
     const tempoInvestimento = new InvestmentPeriod(data.tempoInvestimento);
     const reajusteAnual = new InterestRate(data.reajusteAnual);
+    const inflacao = new InterestRate(data.inflacao);
 
     const simulation = new Simulation(
       aporteInicial,
@@ -26,6 +27,7 @@ export class SimulationService {
       taxaAnual,
       tempoInvestimento,
       reajusteAnual,
+      inflacao,
       estrategia,
     );
 
@@ -37,16 +39,21 @@ export class SimulationService {
       new InterestRate(cdiTaxa),
       tempoInvestimento,
       reajusteAnual,
-      new RegressiveTaxStrategy(),
+      inflacao,
+      new ExemptTaxStrategy(),
     );
 
     return {
       montanteFinal: simulation.getMontanteFinal(),
       montanteLiquido: simulation.getMontanteLiquido(),
+      montantePresenteFinal: simulation.getMontantePresenteFinal(),
+      montantePresenteLiquido: simulation.getMontantePresenteLiquido(),
       comparativoCDI: {
         taxa: cdiTaxa,
         montanteFinal: cdiSimulation.getMontanteFinal(),
         montanteLiquido: cdiSimulation.getMontanteLiquido(),
+        montantePresenteFinal: cdiSimulation.getMontantePresenteFinal(),
+        montantePresenteLiquido: cdiSimulation.getMontantePresenteLiquido(),
       },
     };
   }
