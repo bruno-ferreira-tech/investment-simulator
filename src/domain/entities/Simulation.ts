@@ -6,6 +6,8 @@ import { MonetaryAmount } from "../value-objects/MonetaryAmount";
 export class Simulation {
   private readonly montanteFinal: number;
   private readonly montanteLiquido: number;
+  private readonly valorPresenteFinal: number;
+  private readonly valorPresenteFinalLiquido: number;
 
   constructor(
     aporteInicial: MonetaryAmount,
@@ -13,6 +15,7 @@ export class Simulation {
     taxaAnual: InterestRate,
     tempoInvestimento: InvestmentPeriod,
     reajusteAnual: InterestRate,
+    inflacao: InterestRate,
     private readonly estrategia: ITaxStrategy,
   ) {
     const taxaMensal = Math.pow(1 + taxaAnual.getValue(), 1 / 12) - 1;
@@ -36,6 +39,12 @@ export class Simulation {
       totalMeses,
     );
 
+    this.valorPresenteFinal =
+      montante /
+      Math.pow(1 + inflacao.getValue(), tempoInvestimento.getValue());
+    this.valorPresenteFinalLiquido =
+      (montante - imposto) /
+      Math.pow(1 + inflacao.getValue(), tempoInvestimento.getValue());
     this.montanteFinal = montante;
     this.montanteLiquido = montante - imposto;
   }
@@ -46,5 +55,13 @@ export class Simulation {
 
   getMontanteLiquido(): number {
     return this.montanteLiquido;
+  }
+
+  getMontantePresenteFinal(): number {
+    return this.valorPresenteFinal;
+  }
+
+  getMontantePresenteLiquido(): number {
+    return this.valorPresenteFinalLiquido;
   }
 }
