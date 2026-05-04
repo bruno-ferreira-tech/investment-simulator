@@ -8,6 +8,7 @@ import { RegressiveTaxStrategy } from "../../domain/tax-strategies/RegressiveTax
 import { getCdiRate } from "../../infra/cache/cdi.cache.service";
 import { TaxStrategyFactory } from "../../domain/tax-strategies/TaxStrategyFactory";
 import { ExemptTaxStrategy } from "../../domain/tax-strategies/ExemptTaxStrategy";
+import { CreateReverseSimulationDto } from "./dto/create-simulation-aporte.dto";
 
 @Injectable()
 export class SimulationService {
@@ -56,5 +57,16 @@ export class SimulationService {
         montantePresenteLiquido: cdiSimulation.getMontantePresenteLiquido(),
       },
     };
+  }
+
+  async newReverseSimulation(data: CreateReverseSimulationDto) {
+    const estrategia = TaxStrategyFactory.create(data.tipoInvestimento);
+
+    const aporteInicial = new MonetaryAmount(data.aporteInicial);
+    const taxaAnual = new InterestRate(data.taxaAnual);
+    const tempoInvestimento = new InvestmentPeriod(data.tempoInvestimento);
+    const reajusteAnual = new InterestRate(data.reajusteAnual);
+    const inflacao = new InterestRate(data.inflacao);
+    const amountAmbicious = new MonetaryAmount(data.amountAmbicious);
   }
 }
