@@ -17,17 +17,11 @@ export class ReverseSimulation {
   ) {}
 
   calcularAporte() {
-    const monthlyFee = Math.pow(1 + this.taxAnual.getValue(), 1 / 12) - 1;
-    const totalMonths = this.investmentPeriod.getValue() * 12;
 
     let valueMin = 0;
     let valueMax = this.amountAmbicious.getValue() * 0.1;
     let valueMed = new MonetaryAmount((valueMin + valueMax) / 2, true);
     let difference = 0;
-
-    let currentMonthlyContribution = valueMed;
-    let amount = this.aporteInicial.getValue();
-    let totalInvested = this.aporteInicial.getValue();
 
     do {
       const simulation = new Simulation(
@@ -49,7 +43,7 @@ export class ReverseSimulation {
       valueMed = new MonetaryAmount((valueMax + valueMin) / 2);
 
       difference = simulation.getMontanteFinal() - this.amountAmbicious.getValue();
-    } while (difference < 0.01);
+    } while (Math.abs(difference) > 0.01);
 
     return valueMed.getValue();
   }

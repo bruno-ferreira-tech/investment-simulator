@@ -12,7 +12,7 @@ export class SimulationController {
     return this.simulationService.newSimulation(dto);
   }
 
-  @Post()
+  @Post("reverse-simulation")
   createSimulationAporte(@Body() dto: CreateReverseSimulationDto){
     return this.simulationService.newReverseSimulation(dto)
   }

@@ -9,6 +9,7 @@ import { getCdiRate } from "../../infra/cache/cdi.cache.service";
 import { TaxStrategyFactory } from "../../domain/tax-strategies/TaxStrategyFactory";
 import { ExemptTaxStrategy } from "../../domain/tax-strategies/ExemptTaxStrategy";
 import { CreateReverseSimulationDto } from "./dto/create-simulation-aporte.dto";
+import { ReverseSimulation } from "../../domain/entities/ReverseSimulation";
 
 @Injectable()
 export class SimulationService {
@@ -68,5 +69,20 @@ export class SimulationService {
     const reajusteAnual = new InterestRate(data.reajusteAnual);
     const inflacao = new InterestRate(data.inflacao);
     const amountAmbicious = new MonetaryAmount(data.amountAmbicious);
+
+    const simulation = new ReverseSimulation(
+      aporteInicial,
+      taxaAnual,
+      tempoInvestimento,
+      reajusteAnual,
+      inflacao,
+      estrategia,
+      amountAmbicious
+    )
+
+    const aporteMensal = simulation.calcularAporte()
+
+    return {"aporteMensal": aporteMensal}
+    
   }
 }

@@ -47,7 +47,7 @@ export class CreateSimulationDto {
   @Max(100, { message: 'O campo "inflacao" deve ser menor ou igual a 100.' })
   inflacao!: number;
 
-  @IsNotEmpty({ message: "O tipo de investimento é obrigatório." })
+  @IsNotEmpty({ message: "O campo 'tipoInvestimento' é obrigatório." })
   @IsEnum(["CDB", "LCI", "LCA"], {
     message: "O tipo deve ser CDB, LCI ou LCA.",
   })
