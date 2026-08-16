@@ -30,4 +30,18 @@ describe("ReverseSimulation", () => {
     // ASSERT
     expect(aporte).toBeCloseTo(401.14, 0);
   });
+
+  it("deve retornar aporte zero quando a meta já é atingida só com o inicial", () => {
+    const reverseSimulation = new ReverseSimulation(
+      new MonetaryAmount(10000),
+      new InterestRate(10),
+      new InvestmentPeriod(1),
+      new InterestRate(0),
+      new InterestRate(5),
+      new ExemptTaxStrategy(),
+      new MonetaryAmount(5000),
+    );
+
+    expect(reverseSimulation.calcularAporte()).toBe(0);
+  });
 });

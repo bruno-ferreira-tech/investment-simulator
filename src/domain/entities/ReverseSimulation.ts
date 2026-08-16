@@ -17,12 +17,54 @@ export class ReverseSimulation {
   ) {}
 
   calcularAporte() {
+    const simulationSemAporteMensal = new Simulation(
+      this.aporteInicial,
+      new MonetaryAmount(0, true),
+      this.taxAnual,
+      this.investmentPeriod,
+      this.reajusteAnual,
+      this.inflacao,
+      this.tributationStrategy,
+    );
+
+    if (
+      simulationSemAporteMensal.getMontanteFinal() >=
+      this.amountAmbicious.getValue()
+    ) {
+      return 0;
+    }
 
     let valueMin = 0;
     let valueMax = this.amountAmbicious.getValue() * 0.1;
-    let valueMed = new MonetaryAmount((valueMin + valueMax) / 2, true);
     let difference = 0;
+    let simulation: Simulation;
 
+    simulation = new Simulation(
+      this.aporteInicial,
+      new MonetaryAmount(valueMax, true),
+      this.taxAnual,
+      this.investmentPeriod,
+      this.reajusteAnual,
+      this.inflacao,
+      this.tributationStrategy,
+    );
+
+    while (simulation.getMontanteFinal() < this.amountAmbicious.getValue()) {
+      valueMax *= 2;
+      
+      simulation = new Simulation(
+        this.aporteInicial,
+        new MonetaryAmount(valueMax, true),
+        this.taxAnual,
+        this.investmentPeriod,
+        this.reajusteAnual,
+        this.inflacao,
+        this.tributationStrategy,
+      );
+    }
+    
+    let valueMed = new MonetaryAmount((valueMin + valueMax) / 2, true);
+    
     do {
       const simulation = new Simulation(
         this.aporteInicial,
