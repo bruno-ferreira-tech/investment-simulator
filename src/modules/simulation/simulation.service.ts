@@ -4,10 +4,12 @@ import { Simulation } from "../../domain/entities/Simulation";
 import { MonetaryAmount } from "../../domain/value-objects/MonetaryAmount";
 import { InterestRate } from "../../domain/value-objects/InterestRate";
 import { InvestmentPeriod } from "../../domain/value-objects/InvestmentPeriod";
-import { ExemptTaxStrategy } from "../../domain/tax-strategies/ExemptTaxStrategy";
 import { RegressiveTaxStrategy } from "../../domain/tax-strategies/RegressiveTaxStrategy";
 import { getCdiRate } from "../../infra/cache/cdi.cache.service";
 import { TaxStrategyFactory } from "../../domain/tax-strategies/TaxStrategyFactory";
+import { ExemptTaxStrategy } from "../../domain/tax-strategies/ExemptTaxStrategy";
+import { CreateReverseSimulationDto } from "./dto/create-simulation-aporte.dto";
+import { ReverseSimulation } from "../../domain/entities/ReverseSimulation";
 
 @Injectable()
 export class SimulationService {
@@ -19,6 +21,7 @@ export class SimulationService {
     const taxaAnual = new InterestRate(data.taxaAnual);
     const tempoInvestimento = new InvestmentPeriod(data.tempoInvestimento);
     const reajusteAnual = new InterestRate(data.reajusteAnual);
+    const inflacao = new InterestRate(data.inflacao);
 
     const simulation = new Simulation(
       aporteInicial,
@@ -26,6 +29,7 @@ export class SimulationService {
       taxaAnual,
       tempoInvestimento,
       reajusteAnual,
+      inflacao,
       estrategia,
     );
 
@@ -37,17 +41,48 @@ export class SimulationService {
       new InterestRate(cdiTaxa),
       tempoInvestimento,
       reajusteAnual,
-      new RegressiveTaxStrategy(),
+      inflacao,
+      new ExemptTaxStrategy(),
     );
 
     return {
       montanteFinal: simulation.getMontanteFinal(),
       montanteLiquido: simulation.getMontanteLiquido(),
+      montantePresenteFinal: simulation.getMontantePresenteFinal(),
+      montantePresenteLiquido: simulation.getMontantePresenteLiquido(),
       comparativoCDI: {
         taxa: cdiTaxa,
         montanteFinal: cdiSimulation.getMontanteFinal(),
         montanteLiquido: cdiSimulation.getMontanteLiquido(),
+        montantePresenteFinal: cdiSimulation.getMontantePresenteFinal(),
+        montantePresenteLiquido: cdiSimulation.getMontantePresenteLiquido(),
       },
     };
+  }
+
+  async newReverseSimulation(data: CreateReverseSimulationDto) {
+    const estrategia = TaxStrategyFactory.create(data.tipoInvestimento);
+
+    const aporteInicial = new MonetaryAmount(data.aporteInicial);
+    const taxaAnual = new InterestRate(data.taxaAnual);
+    const tempoInvestimento = new InvestmentPeriod(data.tempoInvestimento);
+    const reajusteAnual = new InterestRate(data.reajusteAnual);
+    const inflacao = new InterestRate(data.inflacao);
+    const amountAmbicious = new MonetaryAmount(data.amountAmbicious);
+
+    const simulation = new ReverseSimulation(
+      aporteInicial,
+      taxaAnual,
+      tempoInvestimento,
+      reajusteAnual,
+      inflacao,
+      estrategia,
+      amountAmbicious
+    )
+
+    const aporteMensal = simulation.calcularAporte()
+
+    return {"aporteMensal": aporteMensal}
+    
   }
 }

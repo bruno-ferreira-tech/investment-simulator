@@ -7,7 +7,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "build": "nest build",
-    "test": "jest",
+    "test": "jest --forceExit",
     "test:watch": "jest --watch"
   },
   "jest": {
@@ -31,9 +31,12 @@
   "homepage": "https://github.com/bruno-ferreira-tech/investment-simulator#readme",
   "devDependencies": {
     "@nestjs/cli": "^11.0.16",
+    "@nestjs/testing": "^11.1.19",
     "@types/ioredis": "^4.28.10",
     "@types/jest": "^30.0.0",
+    "@types/supertest": "^7.2.0",
     "jest": "^30.3.0",
+    "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
@@ -41,7 +44,9 @@
   "dependencies": {
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.1.17",
+    "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.1.17",
+    "@nestjs/mapped-types": "^2.1.1",
     "@nestjs/platform-express": "^11.1.17",
     "axios": "^1.14.0",
     "class-transformer": "^0.5.1",

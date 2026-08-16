@@ -13,6 +13,7 @@ describe("Simulation", () => {
     const periodo = new InvestmentPeriod(1);
     const reajusteAnual = new InterestRate(0);
     const estrategia = new ExemptTaxStrategy();
+    const inflacao = new InterestRate(5)
 
     // ACT
     const simulation = new Simulation(
@@ -21,6 +22,7 @@ describe("Simulation", () => {
       taxaAnual,
       periodo,
       reajusteAnual,
+      inflacao,
       estrategia,
     );
 
@@ -45,6 +47,7 @@ describe("Simulation", () => {
     const periodo = new InvestmentPeriod(1);
     const reajusteAnual = new InterestRate(0);
     const estrategia = new ExemptTaxStrategy();
+    const inflacao = new InterestRate(5)
 
     const simulation = new Simulation(
       aporteInicial,
@@ -52,6 +55,7 @@ describe("Simulation", () => {
       taxaAnual,
       periodo,
       reajusteAnual,
+      inflacao,
       estrategia,
     );
 

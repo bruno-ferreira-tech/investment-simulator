@@ -17,7 +17,7 @@ export class CreateSimulationDto {
 
   @IsNotEmpty({ message: 'O campo "aporteMensal" é obrigatório.' })
   @IsNumber({}, { message: 'O campo "aporteMensal" deve ser um número.' })
-  @Min(0, { message: 'O campo "aporteMensal" não pode ser negativo.'})
+  @Min(0, { message: 'O campo "aporteMensal" não pode ser negativo.' })
   aporteMensal!: number;
 
   @IsNotEmpty({ message: 'O campo "taxaAnual" é obrigatório.' })
@@ -41,7 +41,13 @@ export class CreateSimulationDto {
   })
   reajusteAnual!: number;
 
-  @IsNotEmpty({ message: "O tipo de investimento é obrigatório." })
+  @IsNotEmpty({ message: 'O campo "inflacao" é obrigatório.' })
+  @IsNumber({}, { message: 'O campo "inflacao" deve ser um número.' })
+  @Min(0, { message: 'O campo "inflacao" deve ser maior ou igual a 0.' })
+  @Max(100, { message: 'O campo "inflacao" deve ser menor ou igual a 100.' })
+  inflacao!: number;
+
+  @IsNotEmpty({ message: "O campo 'tipoInvestimento' é obrigatório." })
   @IsEnum(["CDB", "LCI", "LCA"], {
     message: "O tipo deve ser CDB, LCI ou LCA.",
   })
